@@ -41,6 +41,7 @@ if __name__ == '__main__':
     all_steps = np.concatenate([f.result() for f in futures])
 
     end_time = time.time()
+    # шукаю середнє як суму усіх кроків / на кількість чисел
     average = sum(all_steps) / N
 
     print(f"Перші 20 результатів для перевірки: {list(all_steps)}")
