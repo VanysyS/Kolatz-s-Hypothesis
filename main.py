@@ -3,6 +3,7 @@ import numpy as np
 from numba import njit
 from concurrent.futures import ThreadPoolExecutor
 
+# Функція з відключеним GIL що рахує кроки до 1
 @njit(nogil=True)
 def dojob(numbers_chunk):
     size = len(numbers_chunk)
@@ -24,8 +25,8 @@ def dojob(numbers_chunk):
 
 if __name__ == '__main__':
     N = 10_000_000
-    NUM_THREADS = 100
-    numbers = np.random.randint(2, N, N)
+    NUM_THREADS = 100 # кс-ть потоків
+    numbers = np.random.randint(2, N, N) # Числа генеруються від 2 до N, а наступна N розмірність масиву
     start_time = time.time()
 
     # Розбиття масиву на рівні частини
@@ -34,13 +35,14 @@ if __name__ == '__main__':
 
     with ThreadPoolExecutor(max_workers=NUM_THREADS) as executor:
         for chunk in chunks:
-            futures.append(executor.submit(dojob, chunk))
+            futures.append(executor.submit(dojob, chunk)) # Викликає функцію dojob та закидує результат у futures
 
-        all_steps = np.concatenate([f.result() for f in futures])
+    # З'єднує всі futures
+    all_steps = np.concatenate([f.result() for f in futures])
 
     end_time = time.time()
     average = sum(all_steps) / N
 
-    print(f"Перші 20 результатів для перевірки: {list(all_steps[:N])}")
+    print(f"Перші 20 результатів для перевірки: {list(all_steps)}")
     print(f"Середня кількість кроків: {average}")
     print(f"Загальний час виконання: {end_time - start_time:.4f} секунд")
