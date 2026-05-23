@@ -27,6 +27,7 @@ if __name__ == '__main__':
     N = 10_000_000
     NUM_THREADS = 100 # кс-ть потоків
     numbers = np.random.randint(2, N, N) # Числа генеруються від 2 до N, а наступна N розмірність масиву
+    # початок відліку
     start_time = time.time()
 
     # Розбиття масиву на рівні частини
@@ -41,6 +42,7 @@ if __name__ == '__main__':
     all_steps = np.concatenate([f.result() for f in futures])
 
     end_time = time.time()
+    # шукаю середнє як суму усіх кроків / на кількість чисел
     average = sum(all_steps) / N
 
     print(f"Перші 20 результатів для перевірки: {list(all_steps)}")
